@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Anyone can read events and photos
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if false; // Only via Admin SDK or seeding
+
+      match /photos/{photoId} {
+        allow read: if true;
+        allow write: if false; // Handled client-side via your admin password
+      }
+    }
+  }
+}
+
+// NOTE: For a simple personal gallery, the above is fine.
+// To restrict uploads so only the admin can write, you can
+// enable Firebase Auth and check request.auth != null.

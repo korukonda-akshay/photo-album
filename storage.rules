@@ -1,0 +1,13 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /events/{eventId}/{allPaths=**} {
+      // Anyone can read (view photos)
+      allow read: if true;
+      // Anyone can write for now (secure with Auth later)
+      allow write: if request.resource.size < 20 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+  }
+}
